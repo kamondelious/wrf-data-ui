@@ -1,0 +1,11 @@
+assets/
+.claude/
+CLAUDE.md
+GEMINI.md
+package-lock.json
+*~
+\#*\#
+.\#*
+.#*
+*.elc
+

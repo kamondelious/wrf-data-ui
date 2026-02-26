@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>War Robots : Frontiers - Game Data Catalog</title>
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+  <div class="frame">
+    <div class="content">
+
+      <main class="panel list">
+
+        <div class="list-header">
+          <div class="brand">
+            <img src="./assets/WRF_Logo_Left_2C.png" alt="War Robots: Frontiers" class="logo" title="War Robots : Frontiers © 2026 MY.GAMES B.V., NETHERLANDS. All rights reserved. All trademarks are the property of their respective owners" />
+          </div>
+
+          <div class="desc">
+            <div class="desc-content">
+              <div id="descTitle" class="desc-title">Description</div>
+              <div id="detailText" class="desc-body">
+                Hover a talent to see its description.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-nav">
+          <div class="tabstrip" id="tabstrip">
+            <button class="tab active" data-section="pilots">Pilots</button>
+            <button class="tab" data-section="torsos">Torsos</button>
+            <button class="tab" data-section="chassis">Chassis</button>
+            <button class="tab" data-section="shoulders">Shoulders</button>
+            <button class="tab" data-section="weapons">Weapons</button>
+            <button class="tab" data-section="gear">Gear</button>
+            <button class="tab" data-section="titans">Titans</button>
+            <button class="tab" data-section="filters">Filters</button>
+          </div>
+
+          <div class="nav-controls">
+            <button id="clearFiltersBtn" class="btn-clear-filters visibility-hidden">Clear Filters</button>
+            <div id="levelControl" class="level-control visibility-hidden"></div>
+          </div>
+        </div>
+
+        <div class="data-area">
+          <div id="filterRow" class="filter-row"></div>
+          <div id="listHead" class="list-head"></div>
+
+          <div id="dataList" class="rows" role="listbox"></div>
+
+          <div id="noResults" class="no-results hidden">
+            No results match the selected filters.
+          </div>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
