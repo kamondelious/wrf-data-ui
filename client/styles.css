@@ -23,20 +23,22 @@
 .visibility-hidden{ visibility: hidden; }
 
 *{ box-sizing: border-box; }
-html,body{ height:100%; }
+html{ height:100%; overflow: auto; }
 
 body{
+  height:100%;
   margin:0;
   font-family: var( --font );
   color: var( --text );
   background: radial-gradient( 1200px 800px at 20% 10%, rgba( 90,140,220,0.18 ), transparent 60% ),
               radial-gradient( 900px 600px at 80% 20%, rgba( 80,220,200,0.10 ), transparent 55% ),
               var( --bg );
-  overflow: hidden;
+  background-attachment: fixed;
+  overflow: visible;
 }
 
-.frame{ height: 100%; display:flex; flex-direction:column; min-height:0; }
-.content{ flex:1; padding: 12px; min-height:0; display:flex; }
+.frame{ min-height: 100vh; display:flex; flex-direction:column; width: fit-content; min-width: 100%; }
+.content{ padding: 12px; display:flex; width: fit-content; min-width: 100%; }
 
 .panel{
   background: var( --panel );
@@ -45,8 +47,7 @@ body{
   box-shadow: 0 0 0 1px rgba( 255,255,255,0.05 ) inset;
   display:flex;
   flex-direction:column;
-  min-height:0;
-  width: 100%;
+  min-width: 100%;
 }
 
 .list-header{
@@ -77,14 +78,31 @@ body{
   background: rgba( 16,24,32,0.92 );
   align-items: flex-end;
   justify-content: space-between;
+  position: relative;
+}
+.list-nav::after{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var( --stroke2 );
+  z-index: 1;
 }
 
 .nav-controls{
   display: flex;
-  gap: 12px;
-  align-items: flex-end;
-  padding-bottom: 10px;
-  margin-left: auto;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  flex-shrink: 0;
+  padding: 4px 0;
+}
+
+.filter-row.grid-aligned .nav-controls{
+  grid-column: 1 / -1;
+  justify-self: start;
 }
 
 .desc-controls{
@@ -151,31 +169,34 @@ body{
 }
 
 .tabstrip{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  align-items:flex-end;
-  margin-bottom: -1px;
+  display: flex;
+  gap: 0;
+  flex-wrap: nowrap;
+  align-items: flex-end;
 }
 .tab{
   border: 1px solid var( --stroke );
-  background: rgba( 0,0,0,0.10 );
+  background: rgb( 14, 21, 28 );
   color: var( --tabInactive );
-  padding: 10px 14px;
+  padding: 10px 18px 10px 14px;
   border-radius: 10px 10px 0 0;
   cursor: pointer;
   line-height: 1;
   font-size: 15px;
   font-weight: 500;
+  position: relative;
+  margin-right: -10px;
 }
-.tab:hover{ background: rgba( 120,190,255,0.08 ); color: var( --text ); }
+.tab:hover{
+  background: rgb( 20, 28, 36 );
+  color: var( --text );
+  z-index: 11;
+}
 .tab.active{
   color: var( --text );
-  background: rgba( 12,18,26,1 );
+  background: rgba( 12, 18, 26, 1 );
   border-color: var( --stroke2 );
   border-bottom-color: transparent;
-  position: relative;
-  margin-bottom: -1px;
   z-index: 12;
 }
 
@@ -216,14 +237,18 @@ body{
   min-width: 0;
 }
 
+.data-layout{
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+
 .data-area{
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
+  /* Plain container inside data-layout; sticky children stick within data-layout */
 }
 
 /* Ensure backgrounds extend through full scrollable width */
-.data-area > .filter-row,
+.data-layout > .filter-row,
 .data-area > .list-head,
 .data-area > .rows{
   min-width: var( --grid-width, 0 );
@@ -239,7 +264,6 @@ body{
 .col.col-centered{ text-align: center; }
 
 .filter-row{
-  border-top: 1px solid var( --stroke2 );
   background: rgba( 12,18,26,1 );
   position: sticky;
   top: 0;
@@ -281,7 +305,7 @@ body{
 .filter-row.horizontal.visible{
   display: flex;
   flex-direction: row;
-  gap: 0;
+  gap: 4px;
   padding: 10px 12px 8px 12px;
   align-items: flex-start;
 }
@@ -293,9 +317,8 @@ body{
 }
 
 .filter-row.horizontal .filter-content{
-  flex: 1;
   padding: 0;
-  margin-left: 12px;
+  margin-left: 0;
 }
 
 .filter-header{
@@ -315,8 +338,10 @@ body{
 }
 
 .filter-selection{
-  min-width: 180px;
-  max-width: 220px;
+  width: var( --filter-box-w, auto );
+  min-width: 0;
+  max-width: 100%;
+  flex-shrink: 1;
 }
 
 .filter-title-btn{
@@ -353,9 +378,8 @@ body{
 
 .filter-content{
   display: flex;
-  gap: 8px;
+  gap: 4px;
   padding: 10px 12px 8px 12px;
-  overflow-x: auto;
   align-items: flex-start;
 }
 .filter-content.collapsed{
@@ -365,12 +389,14 @@ body{
 .filter-box{
   display: flex;
   flex-direction: column;
-  min-width: 180px;
-  max-width: 220px;
+  width: var( --filter-box-w, auto );
+  min-width: min-content;
+  max-width: 100%;
   background: rgba( 0,0,0,0.42 );
   border: 1px solid var( --stroke );
   border-radius: 10px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .filter-box-title{
@@ -384,6 +410,7 @@ body{
   position: sticky;
   top: 0;
   z-index: 1;
+  white-space: nowrap;
 }
 
 .filter-box select{
@@ -421,11 +448,10 @@ body{
 
 .list-head{
   padding: 6px 12px;
-  border-top: 1px solid var( --stroke2 );
   border-bottom: 1px solid var( --stroke2 );
   background: rgba( 12,18,26,1 );
   position: sticky;
-  top: var( --filter-height, 120px );
+  top: var( --filter-height, 0 );
   z-index: 9;
   display: grid;
   grid-template-columns: var( --cols, 220px 160px 1fr );
@@ -703,6 +729,44 @@ body{
 }
 .hidden{ display:none; }
 
+.scrim{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba( 0, 0, 0, 0.5 );
+  z-index: 90;
+}
+.scrim[hidden]{ display: none; }
+.scrim:not([hidden]){ display: block; }
+
+/* Inline description drawer (mobile) */
+.desc-drawer{
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+  width: 100%;
+  overflow-anchor: none;
+}
+.desc-drawer.open{
+  grid-template-rows: 1fr;
+}
+.desc-drawer-inner{
+  overflow: hidden;
+  min-height: 0;
+}
+.desc-drawer-content{
+  max-width: calc( 100vw - 24px );
+  width: fit-content;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 10px 12px;
+  background: rgba( 12, 18, 26, 0.95 );
+  border: 1px solid var( --stroke2 );
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  margin-bottom: 4px;
+}
+
 /* Titans vertical key-value list */
 .kv-list{
   display: flex;
@@ -789,12 +853,102 @@ body{
   min-width: 70px;
 }
 
-@media ( max-width: 980px ){
-  .list-header{ flex-direction: column; }
-  .list-nav{ flex-direction: column; align-items: stretch; }
-  .nav-controls{ padding-bottom: 0; padding-top: 8px; }
+
+/* -------- Mobile (≤768px) -------- */
+@media ( max-width: 768px ){
+  .logo{ height: 40px; }
+
+  /* Full bleed — containers grow like desktop, body handles scroll */
+  .panel{ border-radius: 0; }
+  .content{ padding: 0; }
+
+  /* Collapse list-header — brand moves into list-nav via JS */
+  .list-header{ padding: 0; gap: 0; }
+
+  /* Brand sits left of tabs when relocated into list-nav */
+  .list-nav{ justify-content: flex-start; }
+  .brand{ align-self: center; flex-shrink: 0; }
+
+  /* Touch targets */
+  .tab{ min-height: 44px; }
+
+  /* Compact controls */
+  .btn-clear-filters{
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  .level-label{
+    font-size: 9px;
+  }
+  .level-control-inner{
+    gap: 3px;
+  }
+  .level-slider{
+    min-width: 40px;
+    max-width: 60px;
+  }
+  .level-display{
+    font-size: 11px;
+  }
+
+  /* Hide desktop desc panel on mobile — inline drawer used instead */
+  .desc{ display: none; }
 }
 
-.test {
-  color: #061118;
+/* -------- Mobile landscape filter sidebar -------- */
+/* Skipped when .data-layout has .no-sidebar (e.g., titans with level-slider-only) */
+@media ( max-width: 768px ) and ( orientation: landscape ){
+  .data-layout:not( .no-sidebar ){
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    align-items: flex-start;
+  }
+  .data-layout:not( .no-sidebar ) .filter-row.visible{
+    flex-direction: column;
+    width: fit-content;
+    max-width: 250px;
+    min-width: 100px;
+    flex-shrink: 0;
+    overflow: visible;
+    position: static;
+    top: auto;
+  }
+  .data-layout:not( .no-sidebar ) .filter-content{
+    flex: 0 0 auto;
+  }
+  .data-layout:not( .no-sidebar ) .filter-selection{
+    width: 100%;
+  }
+  .data-layout:not( .no-sidebar ) .filter-box{
+    flex: 0 0 auto;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .data-layout:not( .no-sidebar ) .filter-box select{
+    width: auto;
+    flex: 0 0 auto;
+    max-height: none;
+  }
+  /* Horizontal filters become vertical stack */
+  .data-layout:not( .no-sidebar ) .filter-row.horizontal.visible{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .data-layout:not( .no-sidebar ) .filter-row.horizontal .filter-content{
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    margin-top: 0;
+  }
+  .data-layout:not( .no-sidebar ) .data-area{
+    flex: 0 0 auto;
+    overflow: visible;
+    min-width: 0;
+  }
+  .data-layout:not( .no-sidebar ) .list-head{
+    top: 0 !important;
+  }
 }
+

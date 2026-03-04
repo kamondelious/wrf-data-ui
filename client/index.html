@@ -16,7 +16,10 @@
 
         <div class="list-header">
           <div class="brand">
-            <img src="./assets/WRF_Logo_Left_2C.png" alt="War Robots: Frontiers" class="logo" title="War Robots : Frontiers © 2026 MY.GAMES B.V., NETHERLANDS. All rights reserved. All trademarks are the property of their respective owners" />
+            <picture>
+              <source media="( max-width: 768px )" srcset="./assets/Logo_Robot.png" />
+              <img src="./assets/WRF_Logo_Left_2C.png" alt="War Robots: Frontiers" class="logo" title="War Robots : Frontiers © 2026 MY.GAMES B.V., NETHERLANDS. All rights reserved. All trademarks are the property of their respective owners" />
+            </picture>
           </div>
 
           <div class="desc">
@@ -40,23 +43,22 @@
             <button class="tab" data-section="titans">Titans</button>
             <button class="tab" data-section="filters">Filters</button>
           </div>
-
-          <div class="nav-controls">
-            <button id="clearFiltersBtn" class="btn-clear-filters visibility-hidden">Clear Filters</button>
-            <div id="levelControl" class="level-control visibility-hidden"></div>
-          </div>
         </div>
 
-        <div class="data-area">
+        <div class="data-layout">
           <div id="filterRow" class="filter-row"></div>
-          <div id="listHead" class="list-head"></div>
+          <div class="data-area">
+            <div id="listHead" class="list-head"></div>
 
-          <div id="dataList" class="rows" role="listbox"></div>
+            <div id="dataList" class="rows" role="listbox"></div>
 
-          <div id="noResults" class="no-results hidden">
-            No results match the selected filters.
+            <div id="noResults" class="no-results hidden">
+              No results match the selected filters.
+            </div>
           </div>
         </div>
+
+        <div id="scrim" class="scrim" hidden></div>
 
       </main>
 

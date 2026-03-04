@@ -8,4 +8,4 @@ package-lock.json
 .\#*
 .#*
 *.elc
-
+.mcp.json
