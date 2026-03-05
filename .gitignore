@@ -9,3 +9,7 @@ package-lock.json
 .#*
 *.elc
 .mcp.json
+node_modules/
+test-results/
+playwright-report/
+.playwright-mcp/

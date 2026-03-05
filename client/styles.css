@@ -34,7 +34,7 @@ body{
               radial-gradient( 900px 600px at 80% 20%, rgba( 80,220,200,0.10 ), transparent 55% ),
               var( --bg );
   background-attachment: fixed;
-  overflow: visible;
+  overflow: auto;
 }
 
 .frame{ min-height: 100vh; display:flex; flex-direction:column; width: fit-content; min-width: 100%; }
@@ -54,10 +54,13 @@ body{
   display: flex;
   gap: 12px;
   padding: 10px 12px;
-  background: rgba( 16,24,32,0.92 );
+  background: rgba( 16, 24, 32, 1 );
   border-top-left-radius: var( --radius );
   border-top-right-radius: var( --radius );
   align-items: stretch;
+  position: sticky;
+  top: 0;
+  z-index: 12;
 }
 
 .brand{
@@ -266,7 +269,7 @@ body{
 .filter-row{
   background: rgba( 12,18,26,1 );
   position: sticky;
-  top: 0;
+  top: var( --header-height, 0px );
   z-index: 10;
   display: none;
 }
@@ -451,7 +454,7 @@ body{
   border-bottom: 1px solid var( --stroke2 );
   background: rgba( 12,18,26,1 );
   position: sticky;
-  top: var( --filter-height, 0 );
+  top: calc( var( --header-height, 0px ) + var( --filter-height, 0px ) );
   z-index: 9;
   display: grid;
   grid-template-columns: var( --cols, 220px 160px 1fr );
@@ -863,7 +866,7 @@ body{
   .content{ padding: 0; }
 
   /* Collapse list-header — brand moves into list-nav via JS */
-  .list-header{ padding: 0; gap: 0; }
+  .list-header{ padding: 0; gap: 0; position: static; }
 
   /* Brand sits left of tabs when relocated into list-nav */
   .list-nav{ justify-content: flex-start; }
@@ -901,7 +904,7 @@ body{
   .data-layout:not( .no-sidebar ){
     display: flex;
     flex-direction: row;
-    overflow: auto;
+    overflow: visible;
     align-items: flex-start;
   }
   .data-layout:not( .no-sidebar ) .filter-row.visible{
@@ -911,8 +914,9 @@ body{
     min-width: 100px;
     flex-shrink: 0;
     overflow: visible;
-    position: static;
-    top: auto;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
   }
   .data-layout:not( .no-sidebar ) .filter-content{
     flex: 0 0 auto;

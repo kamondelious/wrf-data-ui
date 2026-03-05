@@ -365,17 +365,13 @@ function scrollDrawerIntoView( anchorEl ) {
   // Use offsetHeight (layout height) — NOT getBoundingClientRect().bottom
   // which is viewport-relative and includes non-sticky content above
   // the headers when the page hasn't scrolled past it.
-  //
-  // In mobile landscape (non-titan), .data-layout has overflow: auto
-  // (for the sidebar layout), which captures sticky positioning —
-  // nothing sticks to the viewport, so stickyH is 0.
-  const dl = els.filterRow.parentElement; // .data-layout
-  let stickyH = 0;
-  if ( !dl || getComputedStyle( dl ).overflowY === "visible" ) {
-    stickyH = els.listHead.offsetHeight;
-    if ( els.filterRow.classList.contains( "visible" ) ) {
-      stickyH += els.filterRow.offsetHeight;
-    }
+  let stickyH = els.listHead.offsetHeight;
+  if ( els.filterRow.classList.contains( "visible" ) ) {
+    stickyH += els.filterRow.offsetHeight;
+  }
+  const lh = document.querySelector( ".list-header" );
+  if ( lh && getComputedStyle( lh ).position === "sticky" ) {
+    stickyH += lh.offsetHeight;
   }
 
   const visibleGap = vpHeight - stickyH;
@@ -2371,9 +2367,14 @@ function renderSection( sectionKey ) {
   }
   // If no filters, wireFilterHeaderButtons already hid everything
 
-  // Set filter-height synchronously to avoid one-frame stale positioning
+  // Set header-height and filter-height synchronously to avoid one-frame stale positioning
+  const listHeader = document.querySelector( ".list-header" );
+  const headerHeight = ( listHeader && getComputedStyle( listHeader ).position === "sticky" )
+    ? listHeader.offsetHeight : 0;
   const syncFilterHeight = els.filterRow.classList.contains( "visible" )
     ? els.filterRow.offsetHeight : 0;
+  els.filterRow.style.setProperty( "--header-height", `${ headerHeight }px` );
+  els.listHead.style.setProperty( "--header-height", `${ headerHeight }px` );
   els.listHead.style.setProperty( "--filter-height", `${ syncFilterHeight }px` );
 
   // Equalize filter box widths and refine filter row height after equalization
@@ -2391,6 +2392,10 @@ function renderSection( sectionKey ) {
 
     const filterHeight = ( hasFilters && ( hasFilterBoxes || sectionHasLevels ) && uiState.filtersVisible )
       ? els.filterRow.offsetHeight : 0;
+    const rAfHeader = document.querySelector( ".list-header" );
+    const rAfHeaderH = ( rAfHeader && getComputedStyle( rAfHeader ).position === "sticky" )
+      ? rAfHeader.offsetHeight : 0;
+    els.listHead.style.setProperty( "--header-height", `${ rAfHeaderH }px` );
     els.listHead.style.setProperty( "--filter-height", `${ filterHeight }px` );
   } );
 
@@ -2464,6 +2469,8 @@ async function main( ) {
       const savedPin = _vpSavedPin;
       _vpSavedPin = null;
       relocateBrand( );
+      els.filterRow.style.setProperty( "--header-height", "0px" );
+      els.listHead.style.setProperty( "--header-height", "0px" );
       els.listHead.style.setProperty( "--filter-height", "0px" );
       renderSectionPreservingPin( currentSection, savedPin );
     } );
@@ -2504,6 +2511,11 @@ async function main( ) {
       // Update column header position
       requestAnimationFrame( ( ) => {
         const filterHeight = showRow ? els.filterRow.offsetHeight : 0;
+        const togHeader = document.querySelector( ".list-header" );
+        const togHeaderH = ( togHeader && getComputedStyle( togHeader ).position === "sticky" )
+          ? togHeader.offsetHeight : 0;
+        els.filterRow.style.setProperty( "--header-height", `${ togHeaderH }px` );
+        els.listHead.style.setProperty( "--header-height", `${ togHeaderH }px` );
         els.listHead.style.setProperty( "--filter-height", `${ filterHeight }px` );
       } );
 
