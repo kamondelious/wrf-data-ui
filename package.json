@@ -1,0 +1,24 @@
+{
+  "name": "war_robots-frontiers",
+  "version": "1.0.0",
+  "description": "A web-based catalog for browsing, filtering, sorting, and comparing game data from [War Robots: Frontiers](https://warrobotsfrontiers.com). Players can explore seven equipment sections — Pilots, Torsos, Chassis, Shoulders, Weapons, Gear, and Titans — with level-scaled stats, multi-criteria filtering, and column visibility controls.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test --config tests/playwright.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamondelious/wrf-data-ui.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kamondelious/wrf-data-ui/issues"
+  },
+  "homepage": "https://github.com/kamondelious/wrf-data-ui#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  }
+}
